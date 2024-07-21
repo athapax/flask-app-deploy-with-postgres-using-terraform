@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Messages</h1>
+        
+        <form id="add-message-form">
+            <input type="text" id="new-message" placeholder="Enter new message" required>
+            <button type="submit">Add Message</button>
+        </form>
+
+        <ul id="messages-list">
+            {% for message in messages %}
+            <li>
+                {{ message.message }} 
+                <a href="/update/{{ message.id }}">Edit</a>
+            </li>
+            {% endfor %}
+        </ul>
+        
+        <a href="/">Go back</a>
+    </div>
+
+    <script>
+        // Add message form handler
+        document.getElementById('add-message-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const newMessage = document.getElementById('new-message').value;
+            fetch('/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: newMessage })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    alert('Message added successfully!');
+                    window.location.reload(); // Reload the page to see the new message
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>

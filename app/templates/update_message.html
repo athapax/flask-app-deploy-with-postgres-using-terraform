@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Message</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Update Message</h1>
+        <form id="update-message-form">
+            <input type="hidden" id="message-id" value="{{ message.id }}">
+            <input type="text" id="message" name="message" value="{{ message.message }}" placeholder="Enter your updated message">
+            <button type="submit">Update Message</button>
+        </form>
+        <a href="/messages">Go back</a>
+    </div>
+    <script>
+        // JavaScript to handle form submission
+        document.getElementById('update-message-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const messageId = document.getElementById('message-id').value;
+            const message = document.getElementById('message').value;
+            fetch(`/messages/${messageId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                } else {
+                    alert('Message updated successfully!');
+                    window.location.href = '/messages';
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
