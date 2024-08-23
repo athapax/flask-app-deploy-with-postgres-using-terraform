@@ -10,7 +10,7 @@ resource "aws_ecs_task_definition" "app_task" {
 
   container_definitions = jsonencode([{
     name      = "app"
-    image     = "ooghenekaro/flask-postgres:latest"  # Replace with your Docker image
+    image     = "athapax/flask-postgres:latest"  # Replace with your Docker image
     cpu       = 256
     memory    = 512
     essential = true
